@@ -1,0 +1,20 @@
+{% load static %}
+
+
+<form role="form" method="POST" action="/" class="text-left"
+      enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-outline margin-b-10">
+        {{ contactform.username }}
+    </div>
+    <div class="form-outline margin-b-10">
+        {{ contactform.email }}
+    </div>
+    <div class="form-outline margin-b-10">
+        {{ contactform.phone }}
+    </div>
+    <div class="form-outline margin-b-10">
+        {{ contactform.message }}
+    </div>
+    <button type="submit" class="btn-theme btn-theme-sm btn-base-bg text-uppercase">Submit</button>
+</form>

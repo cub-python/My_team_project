@@ -1,0 +1,227 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en" class="no-js">
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8"/>
+    <title>BlackPearl - {{ title }}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+
+    <!-- GLOBAL MANDATORY STYLES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/simple-line-icons/simple-line-icons.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'vendor/swiper/css/swiper.min.css' %}" rel="stylesheet" type="text/css"/>
+
+    <!-- PAGE LEVEL PLUGIN STYLES -->
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet">
+
+    <!-- THEME STYLES -->
+    <link href="{% static 'css/layout.css' %}" rel="stylesheet" type="text/css"/>
+
+    {% block  css %} {% endblock %}
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
+</head>
+<!-- END HEAD -->
+<!-- BODY -->
+<body>
+<!--========== HEADER ==========-->
+<header class="header navbar-fixed-top">
+    <!-- Navbar -->
+    <nav class="navbar" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="menu-container">
+                <button type="button" class="navbar-toggle"
+                        data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="toggle-icon"></span>
+                </button>
+
+                <!-- Logo -->
+                <div class="logo">
+                    <a class=" logo-wrap
+                " href="{% url 'posts:index' %}">
+                        <img class="logo-img logo-img-main" src="{% static 'img/logo-bpc-light.png' %}"
+                             alt="BlackPearlCode">
+                        <img class="logo-img logo-img-active" src="{% static 'img/logo-bpc-dark.png' %}"
+                             alt="BlackPearlCode">
+                    </a>
+                </div>
+                <!-- End Logo -->
+            </div>
+            <!-- Авторизация/регистрация -->
+            <div class="collapse navbar-collapse nav-collapse">
+                <div>
+                    <ul style="margin-top: 30px" class="navbar-nav-right">
+
+
+                        {% if user.is_authenticated %}
+                            <button class="btn-theme btn-theme-log btn-base-bg text-uppercase">
+                                <i class="fa fa-user" aria-hidden="true"
+                                   onclick=location.href="{% url 'users:profile' user.pk %}" title="Профиль"></i>
+                            </button>
+                            <button class="btn-theme btn-theme-log btn-base-bg text-uppercase">
+                                <i class="fa fa-bars" aria-hidden="true"
+                                   onclick=location.href="{% url 'posts:myposts' %}" title="Мои посты"></i>
+                            </button>
+                            <button class="btn-theme btn-theme-log btn-base-bg text-uppercase">
+                                <i class="fa fa-plus" aria-hidden="true"
+                                   onclick=location.href="{% url 'posts:create-post' %}" title="Добавить пост"></i>
+                            </button>
+                            {% if user.is_superuser %}
+                                <button class="btn-theme btn-theme-log btn-base-bg text-uppercase">
+                                    <i class="fa fa-envelope-o" aria-hidden="true"
+                                       onclick=location.href="{% url 'contacts:main' %}" title="Сообщения"></i>
+                                </button>
+                            {% endif %}
+
+                            <button onclick=location.href="{% url 'users:logout' %}" title="Выйти"
+                                    class="btn-theme btn-theme-log btn-base-bg text-uppercase">
+                                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                            </button>
+
+
+                        {% else %}
+                            <button onclick=location.href="{% url 'users:login' %}" title="Войти"
+                                    class="btn-theme btn-theme-log btn-base-bg text-uppercase">
+                                <i class="fa fa-sign-in" aria-hidden="true"></i>
+                            </button>
+
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <!-- конец Авторизация/регистрация  -->
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse nav-collapse">
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-item-child nav-item-hover active"
+                                                href="{% url 'posts:index' %}">Сегодня</a></li>
+                        {% for category in categories %}
+                            <li class="nav-item">
+                                <a class="nav-item-child nav-item-hover"
+                                   href="{% url 'posts:category-posts' category.name %}">
+                                    {{ category.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        <li class="nav-item"><a class="nav-item-child nav-item-hover" href="{% url 'posts:about' %}">
+                            O нас</a></li>
+                        <li class="nav-item"><a class="nav-item-child nav-item-hover" href="{% url 'posts:faq' %}">
+                            FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- End Navbar Collapse -->
+        </div>
+    </nav>
+    <!-- Navbar -->
+</header>
+<!--========== END HEADER ==========-->
+
+{% block content %}{% endblock %}
+
+<!--========== FOOTER ==========-->
+<footer class="footer">
+    <!-- Links -->
+    <div class="footer-seperator">
+        <div class="content-lg container">
+            <div class="row">
+                <div class="col-sm-2 sm-margin-b-50">
+                    <!-- List -->
+                    <ul class="list-unstyled footer-list">
+                        <li class="footer-list-item"><a class="footer-list-link"
+                                                        href="{% url 'posts:index' %}">Главная</a></li>
+                        {% for category in categories %}
+                            <li class="footer-list-item"><a class="footer-list-link"
+                                                            href="{% url 'posts:category-posts' category.name %}">{{ category.name }}</a>
+                            </li>
+                        {% endfor %}
+                        <li class="footer-list-item"><a class="footer-list-link" href="{% url 'posts:about' %}">О
+                            нас</a></li>
+                        <li class="footer-list-item"><a class="footer-list-link" href="{% url 'posts:faq' %}">FAQ</a>
+                        </li>
+                    </ul>
+                    <!-- End List -->
+                </div>
+                <div class="col-sm-4 sm-margin-b-30">
+                    <!-- List -->
+                    <ul class="list-unstyled footer-list">
+                        <li class="footer-list-item">
+                            <i class="fa fa-github fa-lg">&nbsp;<a class="footer-list-link"
+                                                                   href="https://github.com/nezl0i/BlackPearl"
+                                                                   target="_blank">Github</a></i>
+                        </li>
+                        <li class="footer-list-item">
+                            <i class="fa fa-google fa-lg">&nbsp;<a class="footer-list-link"
+                                                                   href="https://docs.google.com/document/d/1rddMUFiurb0MAidKM9s0uAl2NFrMt7WdWhYT-B4wCwk/edit"
+                                                                   target="_blank">Google</a></i>
+                        </li>
+                        <li class="footer-list-item">
+                            <i class="fa fa-trello fa-lg">&nbsp;<a class="footer-list-link"
+                                                                   href="https://trello.com/b/BHH4DWX2/%D0%BC%D0%B5%D1%81%D1%82%D0%BD%D1%8B%D0%B9-%D1%85%D0%B0%D0%B1%D1%80-%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D1%8B-blackpearlcode"
+                                                                   target="_blank">Trello</a></i>
+                        </li>
+                    </ul>
+                    <!-- End List -->
+                </div>
+                <div class="col-sm-5 sm-margin-b-30">
+                    <div class="card card-user align-items-center">
+                        <h2 class="color-white">Связь с нами</h2>
+                        {% include 'contact_form.html' %}
+                    </div>
+                </div>
+            </div>
+            <!--// end row -->
+        </div>
+    </div>
+    <!-- End Links -->
+
+    <!-- Copyright -->
+    <div class="content container">
+        <div class="row">
+            <div class="col-xs-6">
+                <img class="footer-logo" src="{% static 'img/logo-bpc-light.png' %}" alt="BlackPearlCode">
+            </div>
+
+        </div>
+        <!--// end row -->
+    </div>
+    <!-- End Copyright -->
+</footer>
+<!--========== END FOOTER ==========-->
+<!-- Back To Top -->
+<a href="javascript:void(0);" class="js-back-to-top back-to-top">Top</a>
+
+<!-- CORE PLUGINS -->
+<script src="{% static 'vendor/jquery.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'vendor/jquery-migrate.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
+
+<!-- PAGE LEVEL PLUGINS -->
+<script src="{% static 'vendor/jquery.easing.js' %}" type="text/javascript"></script>
+<script src="{% static 'vendor/jquery.back-to-top.js' %}" type="text/javascript"></script>
+<script src="{% static 'vendor/jquery.smooth-scroll.js' %}" type="text/javascript"></script>
+<script src="{% static 'vendor/jquery.wow.min.js' %}" type="text/javascript"></script>
+
+
+<!-- PAGE LEVEL SCRIPTS -->
+<script src="{% static 'js/layout.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/components/wow.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/likes.js' %}" type="text/javascript"></script>
+<script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script>
+
+{% block js %}{% endblock %}
+
+</body>
+<!-- END BODY -->
